@@ -93,33 +93,5 @@ def generate_keyword_analysis():
         
         # Store results in session_state
         st.session_state.keyword_counts = keyword_counts
-    else:
-        keyword_counts = st.session_state.keyword_counts
-
-    # Filter out low-frequency keywords
-    min_frequency = 2
-    filtered_counts = {k: v for k, v in keyword_counts.items() if v >= min_frequency}
-
-    # Create visualization
-    st.subheader("Research Keywords Cloud:")
-    col1, col2 = st.columns([3, 1])
-
-    with col1:
-        fig, ax = plt.subplots(figsize=(10, 5))
-        wordcloud = WordCloud(
-            width=800,
-            height=400,
-            background_color='black',
-            colormap='viridis',
-            max_words=50
-        ).generate_from_frequencies(filtered_counts)
-        
-        plt.imshow(wordcloud, interpolation='bilinear')
-        plt.axis('off')
-        st.pyplot(fig)
-
-    with col2:
-        st.markdown("**Top Keywords**")
-        for word, count in keyword_counts.most_common(10):
-            st.markdown(f"- {word} ({count})")
+        st.rerun()
 

@@ -122,5 +122,6 @@ def orchestrator_agent():
     header_container.empty()
     progress_container.empty()
     status_text.empty()
+    st.rerun()
 
 

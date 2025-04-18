@@ -226,8 +226,8 @@ def process_and_index_document(uploaded_file):
 
 def chatbot_page():
     
-    st.title("Welcome to the research paper chatbot")
-    st.write("You can ask questions about your uploaded research paper here.")
+    st.title("Research paper chatbot")
+    st.write("Ask questions about your uploaded research paper here in a conversational manner.")
 
     for msg in st.session_state.messages:
         with st.chat_message(msg['role']):
@@ -238,7 +238,7 @@ def chatbot_page():
         response = answer(prompt)
         st.chat_message('ai').markdown(response)
 
-    st.session_state.conversation
+    #st.session_state.conversation
 
 def upload_research_paper_page():
 
@@ -246,7 +246,7 @@ def upload_research_paper_page():
         "📌 **Research Paper Upload Guidelines:**\n"
         "- Accepted formats: **PDF (.pdf) and Word Document (.docx)**\n"
         "- Ensure the file is **not password-protected**\n"
-        "- Upload only **one file at a time**"
+        "- Only **one file** is accepted\n"
     )
 
     if "messages" not in st.session_state:
@@ -274,7 +274,7 @@ def upload_research_paper_page():
 def summary_page():
     # Streamlit UI
     st.title("Research Paper Summarizer:")
-    st.info("Use this page to use AI to summarise your uploaded research paper.")
+    st.info("Use this page to let AI generate a structured executive summary, highlighting key insights, methodology, and findings in a concise format.")
 
     if "executive_summary" in st.session_state:
         st.write(st.session_state.executive_summary)
@@ -289,7 +289,7 @@ def summary_page():
 def keywords_page():
     # Streamlit UI
     st.title("Keyword Extractor")
-    st.info("Use this page to extract keywords from your uploaded research paper.")
+    st.info("Use this page to let AI extract keywords from your uploaded research paper and display them in a word cloud.")
 
     if "keyword_counts" in st.session_state:
                 keyword_counts = st.session_state.keyword_counts
@@ -328,17 +328,33 @@ def keywords_page():
 
 def related_works_page():
     # Streamlit UI
-    st.title("Related Works")
-    st.info("Use this page to view related works to the current research paper uploaded.")
+    st.title("Related Works:")
 
-    if "related_papers_response" in st.session_state:
-        st.write(st.session_state.related_papers_response["output"])
-    else:
-        if st.button("Get Related Works"):
-            try:
-                get_related_from_arxiv()
-            except Exception as e:
-                st.error(f"An error occurred: {str(e)}")
+    tab1, tab2 = st.tabs(["arxiV", "Semantic Scholar"])
+
+    with tab1:
+        st.info("Use this page to let AI search for other research papers related to the one uploaded on arxiV.\n"
+        "May take up to a a minute to generate results.")
+        if "related_papers_response_arxiv" in st.session_state:
+            st.write(st.session_state.related_papers_response_arxiv["output"])
+        else:
+            if st.button("Get Related Works from arxiV"):
+                try:
+                    get_related_from_arxiv()
+                except Exception as e:
+                    st.error(f"An error occurred: {str(e)}")
+    
+    with tab2:
+        st.info("Use this page to let AI search for other research papers related to the one uploaded on arxiV.\n"
+        "May take up to a few minutes to generate results.")
+        if "related_papers_response_semanticscholar" in st.session_state:
+            st.write(st.session_state.related_papers_response_semanticscholar["output"])
+        else:
+            if st.button("Get Related Works from Semantic Scholar"):
+                try:
+                    get_related_from_semanticscholar()
+                except Exception as e:
+                    st.error(f"An error occurred: {str(e)}")
 
 def main():
 
@@ -361,8 +377,8 @@ def main():
         if st.button("📌 Extract Key Terms"):
             st.session_state.app_mode = "keywords"
 
-        if st.button("📚 Show References"):
-            st.write("Listing cited works...")
+        #if st.button("📚 Show References"):
+            #st.write("Listing cited works...")
     
         if st.button("🔗 Related Works"):
             st.session_state.app_mode = "related_works"
